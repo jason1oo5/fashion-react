@@ -1,0 +1,67 @@
+default:
+    image: node:16
+
+stages:
+    - build
+    - deploy
+
+Build Client:
+    stage: build
+    variables:
+        CI: "false" # https://vercel.com/guides/how-do-i-resolve-a-process-env-ci-true-error
+    before_script:
+        - cd client/
+        - yarn install
+    script:
+        - yarn run build
+    cache:
+        key: $CI_JOB_NAME_SLUG-cache-$CI_COMMIT_REF_SLUG
+        paths:
+            - client/.yarn/cache/
+            - client/node_modules/
+    artifacts:
+        paths:
+            - client/build/
+
+Build Server:
+    stage: build
+    before_script:
+        - cd server/
+        - yarn install
+    script:
+        - echo "We got actually nothing to build here..."
+    cache:
+        key: $CI_JOB_NAME_SLUG-cache-$CI_COMMIT_REF_SLUG
+        paths:
+            - server/.yarn/cache/
+            - server/node_modules/
+    artifacts:
+        paths:
+            - server/node_modules/
+
+Development:
+    extends: .deploy
+    environment: development
+    rules:
+        - if: $CI_COMMIT_BRANCH == "development"
+
+.deploy:
+    stage: deploy
+    image: docker:20.10
+    resource_group: $CI_ENVIRONMENT_NAME
+    variables:
+        DOCKER_BUILDKIT: "1"
+        DOCKER_DRIVER: "overlay2"
+        DOCKER_HOST: ssh://docker@$SERVER_IP
+    before_script:
+        - mkdir -p ~/.ssh
+        - |
+            cat > ~/.ssh/config <<EOF
+                ControlMaster     auto
+                ControlPath       ~/.ssh/control-%C
+                ControlPersist    yes
+            EOF
+        - ssh-keyscan $SERVER_IP > ~/.ssh/known_hosts
+        - eval `ssh-agent -s`
+        - ssh-add - < $DOCKER_USER_KEY
+    script: docker compose up --detach --build --remove-orphans

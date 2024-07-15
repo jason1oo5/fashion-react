@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1
+FROM nginx/unit:1.28.0-node16
+
+WORKDIR /opt/evoweb-next
+
+COPY --link client/build/ client/
+COPY --link server/ server/
+
+COPY --link unit.config.json /docker-entrypoint.d/
+
+# https://github.com/nginx/unit/issues/728
+COPY --link --chmod=755 docker-entrypoint.sh /usr/local/bin/
+
+# It appears the base image has unit-http globally installed.
+# So, link it to the server as if it is installed locally.
+RUN cd server/ && npm link unit-http

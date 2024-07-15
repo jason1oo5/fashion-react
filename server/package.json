@@ -1,0 +1,51 @@
+{
+  "name": "evovor-sever",
+  "version": "1.0.0",
+  "description": "node sever",
+  "main": "index.js",
+  "author": "Araki Yoshito",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon node index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1263.0",
+    "aws-signature-v4": "^1.4.0",
+    "axios": "^0.27.2",
+    "backblaze-b2": "^1.7.0",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "connect-mongodb-session": "^3.1.1",
+    "cookie-parser": "^1.4.6",
+    "core-js": "^3.25.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-fileupload": "^1.4.0",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.14.2",
+    "google-auth-library": "^8.5.1",
+    "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
+    "moment": "^2.29.4",
+    "mongodb": "^4.9.0",
+    "mongoose": "^6.5.3",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.7.8",
+    "nodemon": "^2.0.19",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "redis": "^4.3.0"
+  },
+  "_moduleAliases": {
+    "@root": "/",
+    "@mailers": "./mailers",
+    "@routes": "./routes",
+    "@helpers": "./helpers",
+    "@controllers": "./controllers",
+    "@middlewares": "./middlewares",
+    "models": "./models"
+  }
+}

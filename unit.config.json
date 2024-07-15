@@ -1,0 +1,35 @@
+{
+    "listeners": {
+        "*:8080": {
+            "pass": "routes"
+        }
+    },
+    "routes": [
+        {
+            "match": {
+                "uri": "/api/*"
+            },
+            "action": {
+                "pass": "applications/server"
+            }
+        },
+        {
+            "action": {
+                "share": "/opt/evoweb-next/client$uri",
+                "fallback": {
+                    "share": "/opt/evoweb-next/client/index.html"
+                }
+            }
+        }
+    ],
+    "applications": {
+        "server": {
+            "type": "external",
+            "working_directory": "/opt/evoweb-next/server",
+            "executable": "index.js",
+            "environment": {
+                "NODE_OPTIONS": "--loader unit-http/loader.mjs --require unit-http/loader"
+            }
+        }
+    }
+}

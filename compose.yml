@@ -1,0 +1,16 @@
+name: evoweb-next
+
+services:
+    evoweb-next:
+        build:
+            dockerfile: Dockerfile.ci
+        env_file: ${SERVER_ENVFILE:?}
+        restart: always
+        networks:
+            - default
+            - evoweb-laravel
+
+networks:
+    evoweb-laravel:
+        external: true
+        name: build_default
